@@ -34,7 +34,7 @@
     }
     .book .idx { grid-column: 1; grid-row: 2; }
     .book .body { grid-column: 2; grid-row: 1 / 3; }
-    .book .meta { grid-column: 2; grid-row: 3; justify-self: start; }
+    .book .meta, .book .buy-link { grid-column: 2; grid-row: 3; justify-self: start; }
   }
 
   .book-cover {
@@ -55,6 +55,12 @@
     position: absolute; inset: 0; left: auto; width: 8px;
     background: color-mix(in oklab, var(--ink) 12%, transparent);
     border-left: 1px solid var(--rule);
+  }
+  .book-cover img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .book .idx {
@@ -98,40 +104,32 @@
     text-align: right;
   }
 
-  /* Section dividers within the shelf */
-  .shelf-section {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: clamp(20px, 3vw, 48px);
-    align-items: baseline;
-    padding-top: clamp(40px, 5vw, 72px);
-    padding-bottom: 18px;
-  }
-  @media (max-width: 720px) { .shelf-section { grid-template-columns: 1fr; gap: 8px; } }
-  .shelf-section:first-child { padding-top: 0; }
-  .shelf-section .roman {
-    font-family: var(--display); font-style: italic;
-    font-size: clamp(40px, 5vw, 72px);
+  .book-tag {
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 700;
     color: var(--accent);
-    line-height: 0.9;
   }
-  .shelf-section h2 {
-    margin: 0;
-    font-family: var(--display);
-    font-size: clamp(28px, 2.6vw, 40px);
-    letter-spacing: -0.02em;
-    line-height: 1.0;
-    font-weight: 400;
+
+  /* ---------- Category filter chips ---------- */
+  .book-filters {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    padding-bottom: clamp(28px, 4vw, 48px);
+    margin-bottom: clamp(28px, 4vw, 48px);
+    border-bottom: 1px solid var(--rule);
   }
-  .shelf-section .blurb {
-    grid-column: 2;
-    font-family: var(--serif); font-style: italic;
-    font-size: 15px; line-height: 1.5;
-    color: var(--muted);
-    margin: 6px 0 0;
-    max-width: 56ch;
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--rule);
+    background: transparent;
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink-2);
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
   }
-  @media (max-width: 720px) { .shelf-section .blurb { grid-column: 1; } }
+  .chip:hover { border-color: var(--ink); color: var(--ink); }
+  .chip.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 </style>
 </head>
 <body>
@@ -170,105 +168,74 @@
 
 <main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
 
-  <section class="shelf-section">
-    <div class="roman">I</div>
-    <h2>Scripture &amp; The Faith</h2>
-  </section>
+  <div class="book-filters" role="group" aria-label="Filter books by category">
+    <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+    <button class="chip" data-filter="history" aria-pressed="false">History &amp; The Faith</button>
+    <button class="chip" data-filter="marriage" aria-pressed="false">The Home &amp; Marriage</button>
+    <button class="chip" data-filter="child-training" aria-pressed="false">Child Training &amp; Sons</button>
+    <button class="chip" data-filter="work" aria-pressed="false">Work, Calling &amp; The World</button>
+  </div>
+
   <div class="shelf">
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="history">
+      <div class="book-cover"><img src="assets/images/book-covers/defending-constantine.jpg" alt="Defending Constantine book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">01</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">History &amp; The Faith</div>
+        <h3 class="title">Defending Constantine</h3>
+        <div class="by">by <span class="author">Peter J. Leithart</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/0830827226" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="marriage">
+      <div class="book-cover"><img src="assets/images/book-covers/reforming-marriage.jpg" alt="Reforming Marriage book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">02</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">The Home &amp; Marriage</div>
+        <h3 class="title">Reforming Marriage</h3>
+        <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1885767455" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="marriage">
+      <div class="book-cover"><img src="assets/images/book-covers/federal-husband.jpg" alt="Federal Husband book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">03</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">The Home &amp; Marriage</div>
+        <h3 class="title">Federal Husband</h3>
+        <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/188576751X" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
-  </div>
-
-  <section class="shelf-section">
-    <div class="roman">II</div>
-    <h2>Fatherhood &amp; the Home</h2>
-  </section>
-  <div class="shelf">
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="child-training">
+      <div class="book-cover"><img src="assets/images/book-covers/future-men.jpg" alt="Future Men book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">04</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">Child Training &amp; Sons</div>
+        <h3 class="title">Future Men: Raising Boys to Fight Giants</h3>
+        <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1591281105" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="work">
+      <div class="book-cover"><img src="assets/images/book-covers/its-good-to-be-a-man.jpg" alt="It's Good to Be a Man book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">05</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">Work, Calling &amp; The World</div>
+        <h3 class="title">It's Good to Be a Man: A Handbook for Godly Masculinity</h3>
+        <div class="by">by <span class="author">Michael Foster &amp; Dominic Bnonn Tennant</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1954887396" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
+    <article class="book" data-category="work">
+      <div class="book-cover"><img src="assets/images/book-covers/case-for-christian-nationalism.jpg" alt="The Case for Christian Nationalism book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">06</div>
       <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
+        <div class="book-tag">Work, Calling &amp; The World</div>
+        <h3 class="title">The Case for Christian Nationalism</h3>
+        <div class="by">by <span class="author">Stephen Wolfe</span></div>
       </div>
-      <div class="meta">Forthcoming</div>
-    </article>
-  </div>
-
-  <section class="shelf-section">
-    <div class="roman">III</div>
-    <h2>Work, Calling &amp; The World</h2>
-  </section>
-  <div class="shelf">
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
-      <div class="idx">07</div>
-      <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
-      </div>
-      <div class="meta">Forthcoming</div>
-    </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
-      <div class="idx">08</div>
-      <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
-      </div>
-      <div class="meta">Forthcoming</div>
-    </article>
-    <article class="book">
-      <div class="book-cover"><div class="spine"></div></div>
-      <div class="idx">09</div>
-      <div class="body">
-        <h3 class="title">/// title of the volume</h3>
-        <div class="by">by <span class="author">/// author</span></div>
-      </div>
-      <div class="meta">Forthcoming</div>
+      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1957905336" target="_blank" rel="noopener">Buy on Amazon ↗</a>
     </article>
   </div>
 
@@ -304,6 +271,20 @@
     setMenuOpen(nav.getAttribute('data-menu-open') !== 'true');
   });
   nav.querySelectorAll('.nav-links a').forEach((a) => a.addEventListener('click', closeMenu));
+
+  const filterChips = document.querySelectorAll('.chip');
+  const books = document.querySelectorAll('.book');
+  filterChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach((c) => { c.classList.remove('is-active'); c.setAttribute('aria-pressed', 'false'); });
+      chip.classList.add('is-active');
+      chip.setAttribute('aria-pressed', 'true');
+      const filter = chip.dataset.filter;
+      books.forEach((book) => {
+        book.hidden = filter !== 'all' && book.dataset.category !== filter;
+      });
+    });
+  });
 </script>
 </body>
 </html>
