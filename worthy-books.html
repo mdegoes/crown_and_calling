@@ -34,7 +34,8 @@
     }
     .book .idx { grid-column: 1; grid-row: 2; }
     .book .body { grid-column: 2; grid-row: 1 / 3; }
-    .book .meta, .book .buy-link { grid-column: 2; grid-row: 3; justify-self: start; }
+    .book .meta, .book .book-links { grid-column: 2; grid-row: 3; justify-self: start; }
+    .book-links { align-items: flex-start; }
   }
 
   .book-cover {
@@ -102,6 +103,12 @@
     text-transform: uppercase;
     color: var(--muted);
     text-align: right;
+  }
+  .book-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
   }
 
   .book-tag {
@@ -185,7 +192,9 @@
         <h3 class="title">Defending Constantine</h3>
         <div class="by">by <span class="author">Peter J. Leithart</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/0830827226" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/0830827226" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      </div>
     </article>
     <article class="book" data-category="marriage">
       <div class="book-cover"><img src="assets/images/book-covers/reforming-marriage.jpg" alt="Reforming Marriage book cover" loading="lazy" /><div class="spine"></div></div>
@@ -195,7 +204,10 @@
         <h3 class="title">Reforming Marriage</h3>
         <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1885767455" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1885767455" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+        <a class="btn-ghost buy-link" href="https://canonpress.com/products/reforming-marriage-gospel-living-for-couples" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
+      </div>
     </article>
     <article class="book" data-category="marriage">
       <div class="book-cover"><img src="assets/images/book-covers/federal-husband.jpg" alt="Federal Husband book cover" loading="lazy" /><div class="spine"></div></div>
@@ -205,7 +217,10 @@
         <h3 class="title">Federal Husband</h3>
         <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/188576751X" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/188576751X" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+        <a class="btn-ghost buy-link" href="https://canonpress.com/products/federal-husband" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
+      </div>
     </article>
     <article class="book" data-category="child-training">
       <div class="book-cover"><img src="assets/images/book-covers/future-men.jpg" alt="Future Men book cover" loading="lazy" /><div class="spine"></div></div>
@@ -215,7 +230,10 @@
         <h3 class="title">Future Men: Raising Boys to Fight Giants</h3>
         <div class="by">by <span class="author">Douglas Wilson</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1591281105" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1591281105" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+        <a class="btn-ghost buy-link" href="https://canonpress.com/products/future-men-raising-boys-to-fight-giants" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
+      </div>
     </article>
     <article class="book" data-category="work">
       <div class="book-cover"><img src="assets/images/book-covers/its-good-to-be-a-man.jpg" alt="It's Good to Be a Man book cover" loading="lazy" /><div class="spine"></div></div>
@@ -225,7 +243,10 @@
         <h3 class="title">It's Good to Be a Man: A Handbook for Godly Masculinity</h3>
         <div class="by">by <span class="author">Michael Foster &amp; Dominic Bnonn Tennant</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1954887396" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1954887396" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+        <a class="btn-ghost buy-link" href="https://canonpress.com/products/its-good-to-be-a-man" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
+      </div>
     </article>
     <article class="book" data-category="work">
       <div class="book-cover"><img src="assets/images/book-covers/case-for-christian-nationalism.jpg" alt="The Case for Christian Nationalism book cover" loading="lazy" /><div class="spine"></div></div>
@@ -235,7 +256,10 @@
         <h3 class="title">The Case for Christian Nationalism</h3>
         <div class="by">by <span class="author">Stephen Wolfe</span></div>
       </div>
-      <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1957905336" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+      <div class="book-links">
+        <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/1957905336" target="_blank" rel="noopener">Buy on Amazon ↗</a>
+        <a class="btn-ghost buy-link" href="https://canonpress.com/products/the-case-for-christian-nationalism" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
+      </div>
     </article>
   </div>
 
