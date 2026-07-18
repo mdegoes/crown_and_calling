@@ -263,7 +263,7 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
 }
 .page-title {
   font-family: var(--display);
-  font-size: clamp(56px, 9vw, 156px);
+  font-size: clamp(39px, 6.3vw, 109px);
   line-height: 0.96;
   letter-spacing: -0.03em;
   margin: 0;

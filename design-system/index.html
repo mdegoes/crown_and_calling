@@ -137,7 +137,7 @@
       </div>
       <div class="ds-type-table">
         <div class="ds-type-row">
-          <div class="ds-type-meta"><b>Display — Hero</b>clamp(56px, 9vw, 156px)<br>400 · -0.03em · 0.96</div>
+          <div class="ds-type-meta"><b>Display — Hero</b>clamp(39px, 6.3vw, 109px)<br>400 · -0.03em · 0.96</div>
           <div class="ds-type-specimen ds-t-display-hero">Serve the <em>Crown.</em></div>
         </div>
         <div class="ds-type-row">
@@ -262,7 +262,7 @@
           <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
         </div>
       </div>
-      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .chip (filter, worthy-books.html)</span>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .chip (filter, worthy-books.html + worth-a-follow.html)</span>
         <div class="ds-row">
           <button class="chip is-active" type="button">All</button>
           <button class="chip" type="button">Scripture &amp; The Faith</button>
@@ -532,19 +532,67 @@
     </div>
 
     <div class="ds-group">
-      <div class="ds-group-head"><h3>Directory / profile card</h3></div>
-      <div class="ds-spec"><span class="ds-spec-tag">worth-a-follow.html → .follow (as .follow-card)</span>
-        <div class="ds-grid-3">
-          <article class="follow-card">
-            <div class="head">
-              <div class="avatar ds-hatch"></div>
-              <div>
-                <h4 class="name">/// name</h4>
-                <span class="handle">@handle</span>
-              </div>
+      <div class="ds-group-head">
+        <h3>Trust score legend <em>(new)</em></h3>
+        <p>One shared 5-tier scale (worst → best) — never shown as its own standalone block near the top of the page. It only appears via the hover/focus popover on each roster row's badge, and as one full static copy at the very bottom of the page for anyone who can't/won't hover.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .trust-legend-list / .trust-tier</span>
+        <ol class="trust-legend-list">
+          <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+          <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+          <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Two-layer filter chips <em>(new)</em></h3>
+        <p>Two independent <code>.person-filters</code> rows share the <code>.chip</code> atom above, but a roster row must match the active chip in <em>both</em> groups at once (AND) — not a single shared filter variable like the book shelf.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .filters-wrap / .filter-label</span>
+        <div class="filters-wrap">
+          <div class="filter-group">
+            <div class="filter-label">Follow For</div>
+            <div class="person-filters"><button class="chip is-active" type="button">All</button><button class="chip" type="button">Sermons</button><button class="chip" type="button">Education</button></div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-label">Trust Score</div>
+            <div class="person-filters"><button class="chip is-active" type="button">All</button><button class="chip" type="button">The Full Thanksgiving Meal</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Directory / roster row <em>(new)</em></h3>
+        <p>Retired the old 3-column <code>.follow-card</code> grid for this — same row shape as the book row (photo → idx → body → links), just with a person's photo/trust badge/follow-for tags instead of a cover/author/buy-links. A person can carry several follow-for tags at once, unlike the book shelf's one-category-per-row rule, so that filter check is "any tag matches" rather than an exact match; the trust-score badge below is hoverable — try it — and pops the full legend via <code>.trust-popover</code>, a CSS-only (no JS) <code>:hover</code>/<code>:focus-within</code> reveal.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">worth-a-follow.html → .person</span>
+        <div style="border-top: 2px solid var(--ink);">
+          <article class="person">
+            <div class="person-photo ds-hatch"></div>
+            <div class="idx">01</div>
+            <div class="body">
+              <h4 class="name">/// name</h4>
+              <p class="desc">One-line description of why they're worth a follow.</p>
+              <span class="badge-wrap">
+                <button type="button" class="person-badge" aria-describedby="ds-trust-popover">The Full Thanksgiving Meal</button>
+                <div class="trust-popover" id="ds-trust-popover" role="tooltip">
+                  <ol class="trust-legend-list">
+                    <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+                    <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+                    <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+                  </ol>
+                </div>
+              </span>
+              <div class="person-tags"><span class="tag-label">Follow for:</span><span class="tag">Sermons</span><span class="tag">Education</span></div>
             </div>
-            <p class="blurb">One-line description of why they're worth a follow.</p>
-            <div class="foot"><span class="tag">Pastor</span><span>Follow ↗</span></div>
+            <div class="person-links">
+              <a class="btn-ghost" href="#">Follow on X ↗</a>
+              <a class="btn-ghost" href="#">Subscribe on YouTube ↗</a>
+            </div>
           </article>
         </div>
       </div>

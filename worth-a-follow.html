@@ -15,114 +15,200 @@
 <link rel="stylesheet" href="site.css">
 
 <style>
-  /* ---------- Worth a Follow ---------- */
-  .follows {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(20px, 2.5vw, 32px);
+  /* ---------- Trust score legend (also reused inside per-person popovers) ---------- */
+  .trust-legend {
+    padding-top: clamp(28px, 4vw, 44px);
+    margin-top: clamp(40px, 5vw, 72px);
     border-top: 2px solid var(--ink);
-    padding-top: clamp(28px, 3vw, 44px);
   }
-  @media (max-width: 900px) { .follows { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px) { .follows { grid-template-columns: 1fr; } }
-
-  .follow {
+  .trust-legend-list {
     display: flex; flex-direction: column;
-    gap: 16px;
-    padding: 22px;
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    background: color-mix(in oklab, var(--paper) 96%, var(--ink));
-    transition: transform .2s ease, border-color .2s ease;
+    gap: 10px;
+    margin: 0; padding: 0; list-style: none;
   }
-  .follow:hover { transform: translateY(-2px); border-color: var(--ink); }
+  .trust-tier {
+    display: flex; align-items: baseline; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .trust-tier .n {
+    font-family: var(--display); font-style: italic;
+    font-size: 15px;
+    color: var(--accent);
+    width: 18px; flex-shrink: 0;
+  }
+  .trust-tier .name {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .trust-tier .desc {
+    font-family: var(--serif); font-style: italic;
+    font-size: 15px; color: var(--muted);
+  }
 
-  .follow-head {
-    display: flex; align-items: center; gap: 14px;
+  /* ---------- Category + trust-score filter chips (two independent layers) ---------- */
+  .filters-wrap {
+    display: flex; flex-direction: column;
+    gap: 20px;
+    padding-bottom: clamp(28px, 4vw, 48px);
+    margin-bottom: clamp(28px, 4vw, 48px);
+    border-bottom: 1px solid var(--rule);
   }
-  .avatar {
-    position: relative;
-    width: 56px; height: 56px;
+  .filter-label {
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .person-filters {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .chip {
+    display: inline-flex; align-items: center;
+    padding: 10px 18px;
     border-radius: 999px;
+    border: 1.5px solid var(--rule);
+    background: transparent;
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink-2);
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .chip:hover { border-color: var(--ink); color: var(--ink); }
+  .chip.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  /* ---------- Roster list ---------- */
+  .roster {
+    border-top: 2px solid var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .person {
+    display: grid;
+    grid-template-columns: 96px 60px 1fr auto;
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 32px);
+    padding: clamp(20px, 2.5vw, 32px) 0;
+    border-bottom: 1px solid var(--rule);
+    transition: padding-left .2s ease;
+  }
+  .person[hidden] { display: none; }
+  .person:hover { padding-left: 8px; }
+  @media (max-width: 720px) {
+    .person {
+      grid-template-columns: 64px 1fr;
+      gap: 16px;
+      row-gap: 6px;
+    }
+    .person .idx { grid-column: 1; grid-row: 2; }
+    .person .body { grid-column: 2; grid-row: 1 / 3; }
+    .person .person-links { grid-column: 2; grid-row: 3; justify-self: start; }
+    .person-links { align-items: flex-start; }
+  }
+
+  .person-photo {
+    position: relative;
+    aspect-ratio: 1/1;
     background: var(--paper-2);
     overflow: hidden;
-    flex-shrink: 0;
-    border: 1px solid var(--rule);
+    border-radius: 50%;
+    box-shadow: 1px 1px 0 var(--rule);
   }
-  .avatar::before {
+  .person-photo::before {
     content: ""; position: absolute; inset: 0;
     background: repeating-linear-gradient(135deg,
-      transparent 0 6px,
-      color-mix(in oklab, var(--ink) 8%, transparent) 6px 7px);
+      transparent 0 8px,
+      color-mix(in oklab, var(--ink) 7%, transparent) 8px 9px);
+  }
+  .person-photo img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  .follow-id { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-  .follow-name {
-    font-family: var(--display);
-    font-size: 20px;
-    line-height: 1.1;
+  .person .idx {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(28px, 3vw, 40px);
+    color: var(--accent);
     letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  .person .body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .person .name {
+    font-family: var(--display);
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
     font-weight: 400;
     margin: 0;
   }
-  .follow-handle {
+  .person .desc {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+
+  .badge-wrap { position: relative; display: inline-block; width: fit-content; }
+  .person-badge {
+    display: inline-flex; align-items: center;
+    width: fit-content;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+    border-bottom: 1px dashed color-mix(in oklab, var(--accent) 60%, transparent);
+    color: var(--accent);
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 700;
+    cursor: help;
+  }
+  .trust-popover {
+    position: absolute; top: calc(100% + 10px); left: 0;
+    width: min(320px, 80vw);
+    padding: 16px 18px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--rule);
+    opacity: 0; visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity .15s ease, transform .15s ease, visibility .15s;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .badge-wrap:hover .trust-popover,
+  .badge-wrap:focus-within .trust-popover {
+    opacity: 1; visibility: visible; transform: translateY(0);
+    pointer-events: auto;
+  }
+  .trust-popover .trust-legend-list { gap: 8px; }
+  .trust-popover .trust-tier { gap: 8px; }
+  .trust-popover .desc { font-size: 13.5px; }
+
+  .person-tags {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--muted);
   }
-  .follow-blurb {
-    margin: 0;
-    font-family: var(--serif); font-style: italic;
-    font-size: 14.5px; line-height: 1.5;
+  .person-tags .tag-label {
     color: var(--ink-2);
+    margin-right: 6px;
   }
-  .follow-foot {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: auto;
-    padding-top: 14px;
-    border-top: 1px solid var(--rule);
-    font-family: var(--sans); font-size: 10px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--muted); font-weight: 700;
-  }
-  .follow-tag {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    text-transform: uppercase;
-  }
-  .follow-go { color: var(--ink); }
+  .person-tags span.tag:not(:last-child)::after { content: " · "; }
 
-  /* Category bands */
-  .band {
-    display: flex; align-items: baseline; gap: 18px;
-    padding-top: clamp(40px, 5vw, 72px);
-    padding-bottom: 6px;
+  .person-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
   }
-  .band:first-of-type { padding-top: 0; }
-  .band .roman {
-    font-family: var(--display); font-style: italic;
-    font-size: clamp(36px, 4.5vw, 56px);
-    color: var(--accent);
-    line-height: 0.9;
-  }
-  .band h2 {
-    margin: 0;
-    font-family: var(--display);
-    font-size: clamp(26px, 2.4vw, 36px);
-    letter-spacing: -0.02em;
-    line-height: 1.0;
-    font-weight: 400;
-  }
-  .band .blurb {
-    margin-left: auto;
-    font-family: ui-monospace, monospace;
-    font-size: 11px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--muted);
-  }
-  @media (max-width: 720px) { .band .blurb { display: none; } }
 </style>
 </head>
 <body>
@@ -175,152 +261,466 @@
 
 <main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
 
-  <div class="band">
-    <span class="roman">I</span>
-    <h2>Pastors &amp; Teachers</h2>
+  <div class="filters-wrap">
+    <div class="filter-group">
+      <div class="filter-label">Follow For</div>
+      <div class="person-filters" role="group" aria-label="Filter by follow-for category" data-filter-group="follow">
+        <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="family-counsel" aria-pressed="false">Family Counsel</button>
+        <button class="chip" data-filter="sermons" aria-pressed="false">Sermons</button>
+        <button class="chip" data-filter="education" aria-pressed="false">Education</button>
+        <button class="chip" data-filter="post-mill" aria-pressed="false">Postmillennialism</button>
+        <button class="chip" data-filter="culture-war" aria-pressed="false">Culture War</button>
+        <button class="chip" data-filter="apologetics" aria-pressed="false">Apologetics</button>
+        <button class="chip" data-filter="christian-nationalism" aria-pressed="false">Christian Nationalism</button>
+        <button class="chip" data-filter="masculinity" aria-pressed="false">Masculinity</button>
+        <button class="chip" data-filter="politics" aria-pressed="false">Politics</button>
+        <button class="chip" data-filter="history" aria-pressed="false">History</button>
+        <button class="chip" data-filter="biblical-scholarship" aria-pressed="false">Biblical Scholarship</button>
+        <button class="chip" data-filter="debate" aria-pressed="false">Debate</button>
+        <button class="chip" data-filter="self-defense" aria-pressed="false">Self-Defense</button>
+        <button class="chip" data-filter="homesteading" aria-pressed="false">Homesteading</button>
+        <button class="chip" data-filter="reformed-theology" aria-pressed="false">Reformed Theology</button>
+        <button class="chip" data-filter="headship" aria-pressed="false">Headship</button>
+        <button class="chip" data-filter="music" aria-pressed="false">Music</button>
+        <button class="chip" data-filter="political-theology" aria-pressed="false">Political Theology</button>
+        <button class="chip" data-filter="second-amendment" aria-pressed="false">Second Amendment</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label">Trust Score</div>
+      <div class="person-filters" role="group" aria-label="Filter by trust score" data-filter-group="tier">
+        <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="tier-1" aria-pressed="false">Caribbean Death Apple</button>
+        <button class="chip" data-filter="tier-2" aria-pressed="false">Rambutan Pit</button>
+        <button class="chip" data-filter="tier-3" aria-pressed="false">Chicken Dinner</button>
+        <button class="chip" data-filter="tier-4" aria-pressed="false">Steak, Eggs and a Salad</button>
+        <button class="chip" data-filter="tier-5" aria-pressed="false">The Full Thanksgiving Meal</button>
+      </div>
+    </div>
   </div>
-  <section class="follows">
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Pastor</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Teacher</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Theologian</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-  </section>
 
-  <div class="band">
-    <span class="roman">II</span>
-    <h2>Fathers &amp; Builders</h2>
-  </div>
-  <section class="follows">
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
+  <div class="roster">
+    <article class="person" data-categories="apologetics biblical-scholarship debate" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/wes-huff.jpg" alt="Wes Huff" loading="lazy" /></div>
+      <div class="idx">01</div>
+      <div class="body">
+        <h3 class="name">Wes Huff</h3>
+        <p class="desc">Canadian Reformed Baptist apologist and manuscript scholar who calmly dismantled skeptics on Rogan, Piers Morgan, and Shawn Ryan in front of tens of millions — proof that hard evidence and a steady voice still win the room.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-01">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-01" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Apologetics</span>
+          <span class="tag">Biblical Scholarship</span>
+          <span class="tag">Debate</span>
         </div>
       </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Father</span>
-        <span class="follow-go">Follow ↗</span>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/wesleylhuff" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@WesHuff" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/wesley_huff/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.wesleyhuff.com/" target="_blank" rel="noopener">Visit WesleyHuff.com ↗</a>
       </div>
     </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Builder</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Homestead</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-  </section>
 
-  <div class="band">
-    <span class="roman">III</span>
-    <h2>Craftsmen &amp; Workers</h2>
+    <article class="person" data-categories="self-defense masculinity homesteading" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/john-lovell.jpg" alt="John Lovell" loading="lazy" /></div>
+      <div class="idx">02</div>
+      <div class="body">
+        <h3 class="name">John Lovell</h3>
+        <p class="desc">Former Army Ranger turned Christian missionary and firearms trainer — Lovell built Warrior Poet Society to forge men who can protect their homes with both a rifle and a right heart, rejecting the gun industry's tough-guy theater for the real thing.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-02">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-02" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Self-Defense</span>
+          <span class="tag">Masculinity</span>
+          <span class="tag">Homesteading</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/johnlovell275" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@WarriorPoetSociety" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/johnlovell_wps/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="family-counsel sermons education post-mill culture-war reformed-theology" data-tier="tier-5">
+      <div class="person-photo"><img src="assets/images/follow-photos/doug-wilson.jpg" alt="Doug Wilson" loading="lazy" /></div>
+      <div class="idx">03</div>
+      <div class="body">
+        <h3 class="name">Doug Wilson</h3>
+        <p class="desc">Godfather of classical education in America, Wilson is the grandfather you never had: witty, wise, and practical.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-03">The Full Thanksgiving Meal</button>
+          <div class="trust-popover" id="trust-popover-03" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Family Counsel</span>
+          <span class="tag">Sermons</span>
+          <span class="tag">Education</span>
+          <span class="tag">Postmillennialism</span>
+          <span class="tag">Culture War</span>
+          <span class="tag">Reformed Theology</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/douglaswils" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@blogmablog4870" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://dougwils.com/" target="_blank" rel="noopener">Read Blog &amp; Mablog ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="headship family-counsel music" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/brian-sauve.jpg" alt="Brian Sauvé" loading="lazy" /></div>
+      <div class="idx">04</div>
+      <div class="body">
+        <h3 class="name">Brian Sauvé</h3>
+        <p class="desc">Ogden pastor, father of seven, and hymn-writer for the new Christendom — Sauvé makes music you'll actually sing and asks the questions Haunted Cosmos won't let you dodge.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-04">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-04" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Headship</span>
+          <span class="tag">Family Counsel</span>
+          <span class="tag">Music</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/Brian_Sauve" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@Brian_Sauve" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/briansauve/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.briansauve.com/" target="_blank" rel="noopener">Visit BrianSauve.com ↗</a>
+        <a class="btn-ghost person-link" href="https://thehauntedcosmos.com/" target="_blank" rel="noopener">Listen to Haunted Cosmos ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="sermons culture-war reformed-theology" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/toby-sumpter.jpg" alt="Toby Sumpter" loading="lazy" /></div>
+      <div class="idx">05</div>
+      <div class="body">
+        <h3 class="name">Toby Sumpter</h3>
+        <p class="desc">Christ Church associate pastor and CrossPolitic co-host — Sumpter brings Reformed exposition to bear on the muddle of American culture, teaching civics to boot.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-05">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-05" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Sermons</span>
+          <span class="tag">Culture War</span>
+          <span class="tag">Reformed Theology</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/tjsumpter" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://tobyjsumpter.com/" target="_blank" rel="noopener">Read Having Two Legs ↗</a>
+        <a class="btn-ghost person-link" href="https://crosspolitic.com/" target="_blank" rel="noopener">Listen to CrossPolitic ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="masculinity headship family-counsel culture-war" data-tier="tier-5">
+      <div class="person-photo"><img src="assets/images/follow-photos/michael-foster.jpg" alt="Michael Foster" loading="lazy" /></div>
+      <div class="idx">06</div>
+      <div class="body">
+        <h3 class="name">Michael Foster</h3>
+        <p class="desc">Co-author of It's Good to Be a Man and pastor of East River Church — Foster turned a childhood of chaos into the loudest voice calling men out of passivity and into leading their households like they mean it.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-06">The Full Thanksgiving Meal</button>
+          <div class="trust-popover" id="trust-popover-06" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Masculinity</span>
+          <span class="tag">Headship</span>
+          <span class="tag">Family Counsel</span>
+          <span class="tag">Culture War</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/thisisfoster" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/wemadepeople/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.thisisfoster.com/" target="_blank" rel="noopener">Read This Is Foster ↗</a>
+        <a class="btn-ghost person-link" href="https://eastriverchurch.org/" target="_blank" rel="noopener">Visit East River Church ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="christian-nationalism political-theology" data-tier="tier-4">
+      <div class="person-photo"></div>
+      <div class="idx">07</div>
+      <div class="body">
+        <h3 class="name">Stephen Wolfe</h3>
+        <p class="desc">Political theorist and author of The Case for Christian Nationalism — Wolfe makes the intellectual case that a nation's laws and culture should bow the knee to Christ, no apologies offered.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-07">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-07" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Christian Nationalism</span>
+          <span class="tag">Political Theology</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/PerfInjust" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://institutesofchristianpolitics.substack.com/" target="_blank" rel="noopener">Read Institutes of Christian Politics ↗</a>
+        <a class="btn-ghost person-link" href="https://podcasts.apple.com/us/podcast/ars-politica/id1533671922" target="_blank" rel="noopener">Listen to Ars Politica ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="politics culture-war" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/auron-macintyre.jpg" alt="Auron MacIntyre" loading="lazy" /></div>
+      <div class="idx">08</div>
+      <div class="body">
+        <h3 class="name">Auron MacIntyre</h3>
+        <p class="desc">Blaze host and author of The Total State — MacIntyre names how liberal democracies rot, and dares men to do something about it.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-08">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-08" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Politics</span>
+          <span class="tag">Culture War</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/AuronMacintyre" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@AuronMacIntyre" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.theblaze.com/podcasts/the-auron-macintyre-show" target="_blank" rel="noopener">Listen to The Auron MacIntyre Show ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="reformed-theology post-mill" data-tier="tier-3">
+      <div class="person-photo"></div>
+      <div class="idx">09</div>
+      <div class="body">
+        <h3 class="name">Josh Haymes</h3>
+        <p class="desc">Former SOMA co-pastor turned Reformation Red Pill host — Haymes chronicles his own journey out of evangelical mush into postmillennial, Kuyperian Reformed conviction, and invites men to make the same trade.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-09">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-09" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Reformed Theology</span>
+          <span class="tag">Postmillennialism</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/haymes_joshua" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@ReformationRedPill" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/reformation.red.pill.podcast/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://reformationredpill.com/" target="_blank" rel="noopener">Visit ReformationRedPill.com ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="politics second-amendment" data-tier="tier-4">
+      <div class="person-photo"><img src="assets/images/follow-photos/nick-freitas.jpg" alt="Nick Freitas" loading="lazy" /></div>
+      <div class="idx">10</div>
+      <div class="body">
+        <h3 class="name">Nick Freitas</h3>
+        <p class="desc">Green Beret with two combat tours turned Virginia state legislator — Freitas went viral defending the Second Amendment on the House floor and never softened, whether the fight is guns, God, or governance.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-10">Steak, Eggs and a Salad</button>
+          <div class="trust-popover" id="trust-popover-10" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Politics</span>
+          <span class="tag">Second Amendment</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/NickJFreitas" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@Nickjfreitas" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/nickjfreitas/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="politics culture-war debate" data-tier="tier-3">
+      <div class="person-photo"><img src="assets/images/follow-photos/michael-knowles.jpg" alt="Michael Knowles" loading="lazy" /></div>
+      <div class="idx">11</div>
+      <div class="body">
+        <h3 class="name">Michael Knowles</h3>
+        <p class="desc">Yale-educated Daily Wire host — Knowles turns Catholic tradition and old-school rhetoric into daily ammunition against a culture that's forgotten how to argue.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-11">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-11" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Politics</span>
+          <span class="tag">Culture War</span>
+          <span class="tag">Debate</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/michaeljknowles" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@MichaelKnowles" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/michaeljknowles/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.dailywire.com/show/the-michael-knowles-show" target="_blank" rel="noopener">Watch The Michael Knowles Show ↗</a>
+      </div>
+    </article>
+
+    <article class="person" data-categories="history" data-tier="tier-3">
+      <div class="person-photo"><img src="assets/images/follow-photos/david-barton.jpg" alt="Wall Builders" loading="lazy" /></div>
+      <div class="idx">12</div>
+      <div class="body">
+        <h3 class="name">Wall Builders</h3>
+        <p class="desc">David Barton's organization for reclaiming America's Christian founding — WallBuilders digs up the history the textbooks buried, arming men to defend the nation's heritage instead of apologizing for it.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-12">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-12" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">History</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/davidbartonwb" target="_blank" rel="noopener">Follow David Barton on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@wallbuilders" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/wallbuilders/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://wallbuilders.com/" target="_blank" rel="noopener">Visit WallBuilders.com ↗</a>
+      </div>
+    </article>
   </div>
-  <section class="follows">
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Craftsman</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Worker</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-    <article class="follow">
-      <div class="follow-head">
-        <div class="avatar"></div>
-        <div class="follow-id">
-          <h3 class="follow-name">/// name</h3>
-          <span class="follow-handle">@handle</span>
-        </div>
-      </div>
-      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
-      <div class="follow-foot">
-        <span class="follow-tag">Artisan</span>
-        <span class="follow-go">Follow ↗</span>
-      </div>
-    </article>
-  </section>
+
+  <div class="trust-legend">
+    <div class="eyebrow">Trust Score</div>
+    <ol class="trust-legend-list">
+      <li class="trust-tier">
+        <span class="n">1</span>
+        <span class="name">Caribbean Death Apple</span>
+        <span class="desc">Consume this and you will die. Not kidding.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">2</span>
+        <span class="name">Rambutan Pit</span>
+        <span class="desc">Eat this and you will wish you hadn't. Choking material.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">3</span>
+        <span class="name">Chicken Dinner</span>
+        <span class="desc">Lean protein but with a few bones. Consume with discernment.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">4</span>
+        <span class="name">Steak, Eggs and a Salad</span>
+        <span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">5</span>
+        <span class="name">The Full Thanksgiving Meal</span>
+        <span class="desc">You'll not find better.</span>
+      </li>
+    </ol>
+  </div>
 
 </main>
 
@@ -376,6 +776,32 @@
     setMenuOpen(nav.getAttribute('data-menu-open') !== 'true');
   });
   nav.querySelectorAll('.nav-links a').forEach((a) => a.addEventListener('click', closeMenu));
+
+  const people = document.querySelectorAll('.person');
+  const activeFilters = { follow: 'all', tier: 'all' };
+
+  const applyFilters = () => {
+    people.forEach((person) => {
+      const categories = person.dataset.categories.split(' ');
+      const followMatch = activeFilters.follow === 'all' || categories.includes(activeFilters.follow);
+      const tierMatch = activeFilters.tier === 'all' || person.dataset.tier === activeFilters.tier;
+      person.hidden = !(followMatch && tierMatch);
+    });
+  };
+
+  document.querySelectorAll('.person-filters').forEach((group) => {
+    const groupName = group.dataset.filterGroup;
+    const chips = group.querySelectorAll('.chip');
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        chips.forEach((c) => { c.classList.remove('is-active'); c.setAttribute('aria-pressed', 'false'); });
+        chip.classList.add('is-active');
+        chip.setAttribute('aria-pressed', 'true');
+        activeFilters[groupName] = chip.dataset.filter;
+        applyFilters();
+      });
+    });
+  });
 </script>
 </body>
 </html>

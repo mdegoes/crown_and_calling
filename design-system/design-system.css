@@ -115,7 +115,7 @@
 }
 .ds-type-specimen { color: var(--ink); overflow-wrap: anywhere; }
 
-.ds-t-display-hero { font-family: var(--display); font-size: clamp(56px, 9vw, 156px); line-height: 0.96; letter-spacing: -0.03em; font-weight: 400; }
+.ds-t-display-hero { font-family: var(--display); font-size: clamp(39px, 6.3vw, 109px); line-height: 0.96; letter-spacing: -0.03em; font-weight: 400; }
 .ds-t-display-section { font-family: var(--display); font-size: clamp(40px, 5.5vw, 80px); line-height: 0.96; letter-spacing: -0.025em; font-weight: 400; }
 .ds-t-heading-sub { font-family: var(--display); font-size: clamp(26px, 2.4vw, 36px); line-height: 1.0; letter-spacing: -0.02em; font-weight: 400; }
 .ds-t-heading-card { font-family: var(--display); font-size: clamp(22px, 2vw, 30px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 400; }
@@ -327,32 +327,78 @@
   .list-row .meta { grid-column: 2; text-align: left; }
 }
 
-/* ---------- Follow / directory card ---------- */
-.follow-card {
-  display: flex; flex-direction: column;
-  gap: 16px;
-  padding: 22px;
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-  background: color-mix(in oklab, var(--paper) 96%, var(--ink));
-  transition: transform .2s ease, border-color .2s ease;
+/* ---------- Directory / roster row (worth-a-follow.html → .person) ----------
+   Retired the old 3-column .follow-card grid for this — same row shape as
+   .book (photo → idx → body → links), just with a person's photo/badge/tags
+   instead of a book cover/author/buy-links. Not a literal .list-row adoption,
+   same precedent as .book: its own richer class, parallel shape. */
+.person {
+  display: grid;
+  grid-template-columns: 96px 60px 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: padding-left .2s ease;
 }
-.follow-card:hover { transform: translateY(-2px); border-color: var(--ink); }
-.follow-card .head { display: flex; align-items: center; gap: 14px; }
-.follow-card .avatar {
-  position: relative; width: 56px; height: 56px; flex-shrink: 0;
-  border-radius: 999px; overflow: hidden; border: 1px solid var(--rule);
+.person:hover { padding-left: 8px; }
+.person-photo {
+  position: relative; aspect-ratio: 1/1;
+  background: var(--paper-2); overflow: hidden;
+  border-radius: 50%; box-shadow: 1px 1px 0 var(--rule);
 }
-.follow-card .name { font-family: var(--display); font-size: 20px; letter-spacing: -0.01em; margin: 0; }
-.follow-card .handle { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
-.follow-card .blurb { margin: 0; font-family: var(--serif); font-style: italic; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
-.follow-card .foot {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--rule);
-  font-family: var(--sans); font-size: 10px; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--muted); font-weight: 700;
+.person .idx { font-family: var(--display); font-style: italic; font-size: clamp(28px, 3vw, 40px); color: var(--accent); text-align: center; }
+.person .body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.person .name { font-family: var(--display); font-size: clamp(22px, 2vw, 30px); line-height: 1.15; letter-spacing: -0.015em; font-weight: 400; margin: 0; }
+.person .desc { margin: 0; font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.5; color: var(--ink-2); max-width: 60ch; }
+.badge-wrap { position: relative; display: inline-block; width: fit-content; }
+.person-badge {
+  display: inline-flex; align-items: center; width: fit-content;
+  padding: 5px 12px; border-radius: 999px;
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  border-bottom: 1px dashed color-mix(in oklab, var(--accent) 60%, transparent);
+  color: var(--accent);
+  font-family: var(--sans); font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 700;
+  cursor: help;
 }
-.follow-card .tag { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+/* Hover/focus popover — CSS-only (no JS), holds a copy of the full .trust-legend-list */
+.trust-popover {
+  position: absolute; top: calc(100% + 10px); left: 0;
+  width: min(320px, 80vw); padding: 16px 18px;
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--rule);
+  opacity: 0; visibility: hidden; transform: translateY(-4px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s;
+  pointer-events: none; z-index: 20;
+}
+.badge-wrap:hover .trust-popover,
+.badge-wrap:focus-within .trust-popover { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+.trust-popover .trust-legend-list { gap: 8px; }
+.trust-popover .trust-tier { gap: 8px; }
+.trust-popover .desc { font-size: 13.5px; }
+.person-tags { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.person-tags .tag-label { color: var(--ink-2); margin-right: 6px; }
+.person-tags span.tag:not(:last-child)::after { content: " · "; }
+.person-links { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+/* ---------- Two-layer filter chips (worth-a-follow.html → .filters-wrap) ----------
+   Two independent .person-filters rows (Follow For / Trust Score), each its own
+   .filter-group — a person must match the active chip in BOTH groups (AND). */
+.filters-wrap { display: flex; flex-direction: column; gap: 20px; }
+.filter-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+
+/* ---------- Trust score legend (worth-a-follow.html → .trust-legend) ----------
+   One shared 5-tier scale. Never shown as a standalone block near the top —
+   only via the .trust-popover on each .person-badge (hover/focus) and as one
+   full static copy (.trust-legend) at the bottom of the page, right before
+   the footer, for anyone who can't/won't hover. */
+.trust-legend-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.trust-tier { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.trust-tier .n { font-family: var(--display); font-style: italic; font-size: 15px; color: var(--accent); width: 18px; flex-shrink: 0; }
+.trust-tier .name { font-family: var(--sans); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--ink); flex-shrink: 0; }
+.trust-tier .desc { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--muted); }
 
 /* ---------- Gallery piece card ---------- */
 .piece-card { display: flex; flex-direction: column; gap: 18px; }
