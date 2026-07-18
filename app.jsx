@@ -36,13 +36,19 @@ function ThemeToggle({ onToggle }) {
 function Nav({ onJump, onToggleScheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const jump = (id) => { setMenuOpen(false); onJump(id); };
+  const jump = (id) => { setMenuOpen(false); setResourcesOpen(false); onJump(id); };
+  const toggleMenu = () => setMenuOpen((v) => {
+    const next = !v;
+    if (!next) setResourcesOpen(false);
+    return next;
+  });
   return (
     <nav className="nav" data-scrolled={scrolled} data-menu-open={menuOpen}>
       <a className="mark" href="#top" onClick={(e) => { e.preventDefault(); jump("top"); }} aria-label="Crown &amp; Calling — home">
@@ -53,7 +59,33 @@ function Nav({ onJump, onToggleScheme }) {
           <a href="#manifesto" onClick={(e) => { e.preventDefault(); jump("manifesto"); }}>Mission</a>
           <a href="art.html">Art</a>
           <a href="music.html">Music</a>
-          <a href="resources.html">Resources</a>
+          <div
+            className="nav-drop"
+            data-open={resourcesOpen}
+            onMouseEnter={() => setResourcesOpen(true)}
+            onMouseLeave={() => setResourcesOpen(false)}
+          >
+            <button
+              type="button"
+              className="nav-drop-trigger"
+              aria-haspopup="true"
+              aria-expanded={resourcesOpen}
+              aria-controls="nav-resources-panel"
+              data-active="false"
+              onClick={() => setResourcesOpen((v) => !v)}
+            >
+              Resources
+              <svg className="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div className="nav-drop-panel" id="nav-resources-panel">
+              <div className="nav-drop-inner">
+                <a href="resources.html">All Resources</a>
+                <a href="family-prayer.html">Seven Days of Prayer</a>
+                <a href="worthy-books.html">Worthy Books</a>
+                <a href="worth-a-follow.html">Worth a Follow</a>
+              </div>
+            </div>
+          </div>
         </div>
         <ThemeToggle onToggle={onToggleScheme} />
         <button
@@ -61,7 +93,7 @@ function Nav({ onJump, onToggleScheme }) {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="nav-links"
-          onClick={() => setMenuOpen((v) => !v)}
+          onClick={toggleMenu}
         >
           <span className="bars"><span></span><span></span><span></span></span>
         </button>
@@ -126,17 +158,26 @@ function Manifesto() {
   );
 }
 
-function Foot() {
+function Foot({ onJump }) {
   return (
     <footer className="foot">
-      <div className="mark">
-        <Sigil size={36} />
+      <div className="foot-brand">
+        <Sigil size={72} />
+        <em>Deus vult</em>
       </div>
-      <div className="links">
+      <nav className="foot-links" aria-label="Site">
+        <a href="#manifesto" onClick={(e) => { e.preventDefault(); onJump("manifesto"); }}>Mission</a>
+        <a href="art.html">Art</a>
+        <a href="music.html">Music</a>
+        <a href="resources.html">Resources</a>
+        <a href="family-prayer.html" className="foot-sub">Seven Days of Prayer</a>
+        <a href="worthy-books.html" className="foot-sub">Worthy Books</a>
+        <a href="worth-a-follow.html" className="foot-sub">Worth a Follow</a>
+      </nav>
+      <div className="foot-social">
         <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
         <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
       </div>
-      <div><em>Deus vult</em></div>
     </footer>
   );
 }
@@ -157,7 +198,7 @@ function App() {
       <Nav onJump={onJump} onToggleScheme={onToggleScheme} />
       <Hero />
       <Manifesto />
-      <Foot />
+      <Foot onJump={onJump} />
     </>
   );
 }

@@ -58,7 +58,7 @@
   ::selection { background: var(--accent); color: var(--on-accent); }
 
   a { color: inherit; text-decoration: none; }
-  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+  button { font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
 
   /* ---------- Layout ---------- */
   .wrap { padding-left: var(--pad-x); padding-right: var(--pad-x); }
@@ -92,19 +92,52 @@
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
     text-transform: uppercase; font-weight: 700;
   }
-  .nav-links a {
+  .nav-links a, .nav-links .nav-drop-trigger {
     position: relative; padding: 6px 0;
+    display: inline-flex; align-items: center; gap: 4px;
   }
-  .nav-links a::after {
+  .nav-links a::after, .nav-links .nav-drop-trigger::after {
     content: ""; position: absolute; left: 0; right: 100%; bottom: 0;
     height: 1px; background: var(--ink);
     transition: right .25s ease;
   }
-  .nav-links a:hover::after { right: 0; }
+  .nav-links a:hover::after, .nav-links .nav-drop-trigger:hover::after,
+  .nav-links .nav-drop-trigger[data-active="true"]::after { right: 0; }
+  .nav-links .nav-drop-trigger[data-active="true"] { color: var(--ink); }
 
   /* (nav CTA removed) */
 
   .nav-end { display: flex; align-items: center; gap: 20px; }
+
+  /* ---------- Nav dropdown (Resources) ---------- */
+  .nav-drop { position: relative; }
+  .nav-drop-trigger .chevron { transition: transform .2s ease; }
+  .nav-drop[data-open="true"] .nav-drop-trigger .chevron { transform: rotate(180deg); }
+  .nav-drop-panel {
+    position: absolute; top: 100%; left: 50%;
+    min-width: 220px;
+    padding-top: 14px; /* invisible bridge, not a gap — keeps the hover hit-box unbroken between trigger and panel */
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateX(-50%) translateY(-6px);
+    transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  }
+  .nav-drop[data-open="true"] .nav-drop-panel {
+    opacity: 1; visibility: visible; pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .nav-drop-inner {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    box-shadow: 1px 1px 0 var(--rule);
+    padding: 8px 0;
+  }
+  .nav-drop-panel a {
+    display: block;
+    padding: 10px 20px;
+  }
+  .nav-drop-panel a:hover { color: var(--ink); }
+  .nav-drop-inner a + a { border-top: 1px solid var(--rule); }
 
   /* ---------- Nav toggle (mobile hamburger) ---------- */
   .nav-toggle {
@@ -142,10 +175,26 @@
       transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
     }
     .nav-links a { width: 100%; padding: 12px 0; }
-    .nav-links a::after { display: none; }
+    .nav-links a::after, .nav-links .nav-drop-trigger::after { display: none; }
     .nav[data-menu-open="true"] .nav-links {
       opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
     }
+
+    .nav-drop { width: 100%; }
+    .nav-drop-trigger { width: 100%; padding: 12px 0; justify-content: space-between; }
+    .nav-drop-panel {
+      position: static; transform: none;
+      opacity: 1; visibility: visible; pointer-events: auto;
+      padding-top: 0; min-width: 0;
+      display: grid; grid-template-rows: 0fr;
+      transition: grid-template-rows .2s ease;
+    }
+    .nav-drop[data-open="true"] .nav-drop-panel { grid-template-rows: 1fr; }
+    .nav-drop-inner {
+      overflow: hidden; min-height: 0;
+      background: none; border: 0; box-shadow: none; padding: 0;
+    }
+    .nav-drop-panel a { padding: 10px 0 10px 20px; }
   }
 
   .theme-toggle {
@@ -269,6 +318,8 @@
     background: var(--paper-2);
     overflow: hidden;
     border-radius: 2px;
+    width: 66.6667%;
+    align-self: flex-end;
   }
   .hero-photo img {
     position: absolute; inset: 0;
@@ -384,14 +435,25 @@
   .foot {
     border-top: 1px solid var(--rule);
     padding: 28px var(--pad-x);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px;
+    display: grid; grid-template-columns: 1fr auto auto;
+    align-items: start;
+    gap: 48px;
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em;
     text-transform: uppercase; color: var(--muted); font-weight: 700;
   }
   .foot em { font-style: italic; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 14px; color: var(--ink-2); }
-  .foot .links { display: flex; gap: 20px; }
-  .foot .links a:hover { color: var(--ink); }
+  .foot-brand { display: flex; align-items: center; gap: 10px; }
+  .foot-brand .sigil img { width: 100%; height: auto; display: block; }
+  [data-scheme="ink"] .foot-brand .sigil img { filter: invert(1); }
+  .foot-links { display: flex; flex-direction: column; gap: 10px; }
+  .foot-links a.foot-sub { color: var(--ink-2); font-size: 10px; }
+  .foot-social { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+  .foot-links a:hover, .foot-social a:hover { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .foot { grid-template-columns: 1fr; gap: 28px; }
+    .foot-social { align-items: flex-start; }
+  }
 
   /* ---------- Reveal (disabled) ---------- */
   .reveal { opacity: 1; }
