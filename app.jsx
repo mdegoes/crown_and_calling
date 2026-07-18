@@ -82,7 +82,7 @@ function Nav({ onJump, onToggleScheme }) {
                 <a href="resources.html">All Resources</a>
                 <a href="family-prayer.html">Seven Days of Prayer</a>
                 <a href="worthy-books.html">Worthy Books</a>
-                <a href="worth-a-follow.html">Worth a Follow</a>
+                <a href="worthy-men.html">Worthy Men</a>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@ function Foot({ onJump }) {
         <a href="resources.html">Resources</a>
         <a href="family-prayer.html" className="foot-sub">Seven Days of Prayer</a>
         <a href="worthy-books.html" className="foot-sub">Worthy Books</a>
-        <a href="worth-a-follow.html" className="foot-sub">Worth a Follow</a>
+        <a href="worthy-men.html" className="foot-sub">Worthy Men</a>
       </nav>
       <div className="foot-social">
         <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>

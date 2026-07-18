@@ -14,7 +14,7 @@ A multi-page static website built in HTML, CSS, and JSX. Serif-forward editorial
 | `family-prayer.html` | Family prayer |
 | `resources.html` | Resources |
 | `worthy-books.html` | Worthy books |
-| `worth-a-follow.html` | Worth a follow |
+| `worthy-men.html` | Worthy men |
 
 ## Project structure
 
@@ -26,7 +26,7 @@ A multi-page static website built in HTML, CSS, and JSX. Serif-forward editorial
 ├── family-prayer.html
 ├── resources.html
 ├── worthy-books.html
-├── worth-a-follow.html
+├── worthy-men.html
 ├── site.css                # Shared styles
 ├── app.jsx                 # Shared interactive logic
 ├── tweaks-panel.jsx        # In-page tweak controls
