@@ -96,16 +96,16 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
 .nav-drop-trigger .chevron { transition: transform .2s ease; }
 .nav-drop[data-open="true"] .nav-drop-trigger .chevron { transform: rotate(180deg); }
 .nav-drop-panel {
-  position: absolute; top: 100%; left: 50%;
+  position: absolute; top: 100%; right: 0;
   min-width: 220px;
   padding-top: 14px; /* invisible bridge, not a gap — keeps the hover hit-box unbroken between trigger and panel */
   opacity: 0; visibility: hidden; pointer-events: none;
-  transform: translateX(-50%) translateY(-6px);
+  transform: translateY(-6px);
   transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
 }
 .nav-drop[data-open="true"] .nav-drop-panel {
   opacity: 1; visibility: visible; pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 .nav-drop-inner {
   background: var(--paper);
