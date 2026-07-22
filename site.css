@@ -1,16 +1,20 @@
 /* His Majesty’s Sons — shared tokens, nav, footer (used by sub-pages) */
 :root {
-  --paper: #F1ECE0;
-  --paper-2: #E7E1D2;
-  --ink: #0E0E0C;
-  --ink-2: #2A2925;
-  --muted: #6E685D;
-  --rule: rgba(14,14,12,0.18);
-  --accent: #8C2A1F;
-  --on-accent: #F1ECE0;
+  --paper: #EFEDE8;
+  --paper-2: #E0DCD2;
+  --ink: #141006;
+  --ink-2: #3B2F11;
+  --muted: #82714A;
+  --rule: rgba(20,16,6,0.18);
+  --accent: #1D3263;
+  --on-accent: #EFEDE8;
 
   --pad-x: clamp(20px, 4vw, 72px);
   --pad-y: clamp(48px, 7vw, 120px);
+
+  --radius-pill: 999px;
+  --radius-soft: 2px;
+  --shadow-soft: 1px 1px 0 var(--rule);
 
   --display: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
   --serif: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
@@ -18,13 +22,13 @@
 }
 
 [data-scheme="ink"] {
-  --paper: #0E0E0C;
-  --paper-2: #1A1916;
-  --ink: #F1ECE0;
-  --ink-2: #D8D2C2;
-  --muted: #8A857A;
-  --rule: rgba(241,236,224,0.18);
-  --on-accent: #F1ECE0;
+  --paper: #141006;
+  --paper-2: #281F0C;
+  --ink: #EFEDE8;
+  --ink-2: #D8D3C6;
+  --muted: #9A8C6C;
+  --rule: rgba(239,237,232,0.18);
+  --on-accent: #EFEDE8;
 }
 
 [data-density="compact"] {
@@ -106,8 +110,8 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
 .nav-drop-inner {
   background: var(--paper);
   border: 1px solid var(--rule);
-  border-radius: 2px;
-  box-shadow: 1px 1px 0 var(--rule);
+  border-radius: var(--radius-soft);
+  box-shadow: var(--shadow-soft);
   padding: 8px 0;
 }
 .nav-drop-panel a {
@@ -122,7 +126,7 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
   display: none;
   align-items: center; justify-content: center;
   width: 32px; height: 32px; flex-shrink: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--rule);
   color: var(--ink);
   transition: border-color .15s ease;
@@ -179,7 +183,7 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
 .btn-primary, .btn-ghost {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 16px 26px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
   text-transform: uppercase; font-weight: 700;
   transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
@@ -214,11 +218,13 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
   color: var(--muted);
   font-size: 0.6em;
 }
-.sec-head .sec-num {
+.sec-num {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px; letter-spacing: 0.14em;
   color: var(--muted);
   text-transform: uppercase;
+}
+.sec-head .sec-num {
   align-self: start;
   padding-top: 12px;
 }
@@ -241,6 +247,16 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
 .foot-links a.foot-sub { color: var(--ink-2); font-size: 10px; }
 .foot-social { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
 .foot-links a:hover, .foot-social a:hover { color: var(--ink); }
+.foot-legal {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  font-weight: 400;
+}
 
 @media (max-width: 720px) {
   .foot { grid-template-columns: 1fr; gap: 28px; }
@@ -306,7 +322,7 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
   position: relative;
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; flex-shrink: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--rule);
   color: var(--ink);
   transition: border-color .15s ease;
@@ -335,7 +351,7 @@ button { font: inherit; color: inherit; text-transform: inherit; letter-spacing:
   color: var(--paper);
   background: var(--ink);
   padding: 5px 9px;
-  border-radius: 2px;
+  border-radius: var(--radius-soft);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -350,3 +366,57 @@ html.theme-ready .foot,
 html.theme-ready .theme-toggle {
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
+
+/* ---------- Numeral badge (image overlay, e.g. Art/Resources) ---------- */
+.num-badge {
+  font-family: var(--display); font-style: italic;
+  font-size: 18px;
+  background: var(--ink); color: var(--paper);
+  padding: 4px 12px;
+}
+
+/* ---------- Inline arrow glyph (resets letter-spacing inside uppercase labels) ---------- */
+.arrow { font-family: var(--sans); letter-spacing: 0; font-size: 11px; }
+
+/* ---------- Row index numeral (core; size/letter-spacing set per page) ---------- */
+.idx { font-family: var(--display); font-style: italic; color: var(--accent); }
+
+/* ---------- Roman numeral accent (core; size set per page) ---------- */
+.roman { font-family: var(--display); font-style: italic; line-height: 0.9; color: var(--accent); }
+
+/* ---------- Roster row (shared by Worthy Books / Worthy Men lists) ---------- */
+.roster-list { border-top: 2px solid var(--ink); display: flex; flex-direction: column; }
+.roster-row {
+  display: grid;
+  grid-template-columns: 96px 60px 1fr auto;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 32px);
+  padding: clamp(20px, 2.5vw, 32px) 0;
+  border-bottom: 1px solid var(--rule);
+  transition: padding-left .2s ease;
+}
+.roster-row[hidden] { display: none; }
+.roster-row:hover { padding-left: 8px; }
+@media (max-width: 720px) {
+  .roster-row { grid-template-columns: 64px 1fr; gap: 16px; row-gap: 6px; }
+}
+.roster-photo {
+  position: relative;
+  background: var(--paper-2);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.roster-photo::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg,
+    transparent 0 8px,
+    color-mix(in oklab, var(--ink) 7%, transparent) 8px 9px);
+}
+.roster-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.roster-photo--square { aspect-ratio: 3/4; border-radius: var(--radius-soft); }
+.roster-photo--circle { aspect-ratio: 1/1; border-radius: 50%; }

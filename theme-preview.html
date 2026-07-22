@@ -73,8 +73,8 @@
     padding: clamp(28px, 3.5vw, 52px);
     display: flex; flex-direction: column; gap: 20px;
   }
-  .theme-panel-light { background: #F1ECE0; color: #0E0E0C; }
-  .theme-panel-dark  { background: #0E0E0C; color: #F1ECE0; }
+  .theme-panel-light { background: #EFEDE8; color: #141006; }
+  .theme-panel-dark  { background: #141006; color: #EFEDE8; }
 
   .panel-label {
     font-family: ui-monospace, monospace; font-size: 10px;
@@ -87,7 +87,7 @@
     line-height: 1.0; letter-spacing: -0.025em;
     font-weight: 400; margin: 0;
   }
-  .panel-heading em { font-style: italic; color: #8C2A1F; }
+  .panel-heading em { font-style: italic; color: #1D3263; }
   .panel-body {
     font-family: "Libre Baskerville", Georgia, serif;
     font-style: italic; font-size: 16px; line-height: 1.55;
@@ -97,17 +97,17 @@
   .panel-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
   .panel-btn {
     display: inline-flex; align-items: center;
-    padding: 12px 20px; border-radius: 999px;
+    padding: 12px 20px; border-radius: var(--radius-pill);
     font-family: "Libre Baskerville", Georgia, serif;
     font-size: 10px; letter-spacing: 0.22em;
     text-transform: uppercase; font-weight: 700;
     border: 1.5px solid;
     cursor: default;
   }
-  .panel-btn-primary-light { background: #0E0E0C; color: #F1ECE0; border-color: #0E0E0C; }
-  .panel-btn-ghost-light   { background: transparent; color: #0E0E0C; border-color: rgba(14,14,12,.2); }
-  .panel-btn-primary-dark  { background: #F1ECE0; color: #0E0E0C; border-color: #F1ECE0; }
-  .panel-btn-ghost-dark    { background: transparent; color: #F1ECE0; border-color: rgba(241,236,224,.2); }
+  .panel-btn-primary-light { background: #141006; color: #EFEDE8; border-color: #141006; }
+  .panel-btn-ghost-light   { background: transparent; color: #141006; border-color: rgba(20,16,6,.2); }
+  .panel-btn-primary-dark  { background: #EFEDE8; color: #141006; border-color: #EFEDE8; }
+  .panel-btn-ghost-dark    { background: transparent; color: #EFEDE8; border-color: rgba(239,237,232,.2); }
 
   .panel-rule { border: none; border-top: 1px solid; opacity: 0.15; margin: 0; }
   .panel-track {
@@ -115,11 +115,11 @@
     padding: 14px 0;
     border-bottom: 1px solid;
   }
-  .panel-track-light { border-color: rgba(14,14,12,.12); }
-  .panel-track-dark  { border-color: rgba(241,236,224,.12); }
+  .panel-track-light { border-color: rgba(20,16,6,.12); }
+  .panel-track-dark  { border-color: rgba(239,237,232,.12); }
   .panel-track-idx {
     font-family: "Libre Baskerville", Georgia, serif; font-style: italic;
-    font-size: 20px; color: #8C2A1F; min-width: 32px;
+    font-size: 20px; color: #1D3263; min-width: 32px;
   }
   .panel-track-title {
     font-family: "Libre Baskerville", Georgia, serif;
@@ -164,7 +164,7 @@
     padding: 18px 0;
     border-bottom: 1px solid var(--rule);
   }
-  .track-sample .idx { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--accent); }
+  .track-sample .idx { font-size: 20px; } /* font-family/style/color come from the shared `.idx` in site.css */
   .track-sample .title { font-family: var(--display); font-size: clamp(18px, 1.8vw, 24px); letter-spacing: -0.02em; }
   .track-sample .dur  { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
 </style>
@@ -231,7 +231,7 @@
           <div class="panel-btn panel-btn-primary-light">Read the Mission →</div>
           <div class="panel-btn panel-btn-ghost-light">Learn More</div>
         </div>
-        <hr class="panel-rule" style="border-color:#0E0E0C">
+        <hr class="panel-rule" style="border-color:#141006">
         <div class="panel-track panel-track-light">
           <span class="panel-track-idx">01</span>
           <span class="panel-track-title">Warsong</span>
@@ -248,21 +248,21 @@
       <div class="theme-panel theme-panel-dark">
         <div class="panel-label">Dark — Ink</div>
         <h2 class="panel-heading">Rise to your <em>Calling.</em></h2>
-        <p class="panel-body" style="color:#D8D2C2">A fellowship of men learning what it means to bow low before Christ and stand tall in the world He made.</p>
+        <p class="panel-body" style="color:#D8D3C6">A fellowship of men learning what it means to bow low before Christ and stand tall in the world He made.</p>
         <div class="panel-btns">
           <div class="panel-btn panel-btn-primary-dark">Read the Mission →</div>
           <div class="panel-btn panel-btn-ghost-dark">Learn More</div>
         </div>
-        <hr class="panel-rule" style="border-color:#F1ECE0">
+        <hr class="panel-rule" style="border-color:#EFEDE8">
         <div class="panel-track panel-track-dark">
           <span class="panel-track-idx">01</span>
-          <span class="panel-track-title" style="color:#F1ECE0">Warsong</span>
-          <span class="panel-track-dur" style="color:#8A857A">3:42</span>
+          <span class="panel-track-title" style="color:#EFEDE8">Warsong</span>
+          <span class="panel-track-dur" style="color:#9A8C6C">3:42</span>
         </div>
         <div class="panel-track panel-track-dark">
           <span class="panel-track-idx">02</span>
-          <span class="panel-track-title" style="color:#F1ECE0">Watchman's Ballad</span>
-          <span class="panel-track-dur" style="color:#8A857A">4:08</span>
+          <span class="panel-track-title" style="color:#EFEDE8">Watchman's Ballad</span>
+          <span class="panel-track-dur" style="color:#9A8C6C">4:08</span>
         </div>
       </div>
 
@@ -336,6 +336,7 @@
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
+  <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
 
 <script>

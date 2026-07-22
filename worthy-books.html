@@ -15,66 +15,27 @@
 <link rel="stylesheet" href="site.css">
 
 <style>
-  /* ---------- Worthy Books ---------- */
-  .shelf {
-    border-top: 2px solid var(--ink);
-    display: flex; flex-direction: column;
-  }
-  .book {
-    display: grid;
-    grid-template-columns: 96px 60px 1fr auto;
-    align-items: center;
-    gap: clamp(16px, 2.5vw, 32px);
-    padding: clamp(20px, 2.5vw, 32px) 0;
-    border-bottom: 1px solid var(--rule);
-    transition: padding-left .2s ease;
-  }
-  .book[hidden] { display: none; }
-  .book:hover { padding-left: 8px; }
+  /* ---------- Worthy Books ----------
+     Shared roster skeleton (list wrapper, row grid, photo overlay) now lives in
+     site.css as .roster-list / .roster-row / .roster-photo, applied alongside
+     .shelf / .book / .book-cover below — kept in place since .book is queried
+     directly by this page's filter script. Only book-specific bits remain here. */
   @media (max-width: 720px) {
-    .book {
-      grid-template-columns: 64px 1fr;
-      gap: 16px;
-      row-gap: 6px;
-    }
     .book .idx { grid-column: 1; grid-row: 2; }
     .book .body { grid-column: 2; grid-row: 1 / 3; }
     .book .meta, .book .book-links { grid-column: 2; grid-row: 3; justify-self: start; }
     .book-links { align-items: flex-start; }
   }
 
-  .book-cover {
-    position: relative;
-    aspect-ratio: 3/4;
-    background: var(--paper-2);
-    overflow: hidden;
-    border-radius: 2px;
-    box-shadow: 1px 1px 0 var(--rule);
-  }
-  .book-cover::before {
-    content: ""; position: absolute; inset: 0;
-    background: repeating-linear-gradient(135deg,
-      transparent 0 8px,
-      color-mix(in oklab, var(--ink) 7%, transparent) 8px 9px);
-  }
   .book-cover .spine {
     position: absolute; inset: 0; left: auto; width: 8px;
     background: color-mix(in oklab, var(--ink) 12%, transparent);
     border-left: 1px solid var(--rule);
   }
-  .book-cover img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
 
   .book .idx {
-    font-family: var(--display); font-style: italic;
-    font-size: clamp(28px, 3vw, 40px);
-    color: var(--accent);
-    letter-spacing: -0.01em;
-    text-align: center;
+    font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.01em; text-align: center;
+    /* font-family/style/color come from shared `.idx` in site.css */
   }
 
   .book .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -132,7 +93,7 @@
   .chip {
     display: inline-flex; align-items: center;
     padding: 10px 18px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1.5px solid var(--rule);
     background: transparent;
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
@@ -202,9 +163,9 @@
     <button class="chip" data-filter="work" aria-pressed="false">Work, Calling &amp; The World</button>
   </div>
 
-  <div class="shelf">
-    <article class="book" data-category="history">
-      <div class="book-cover"><img src="assets/images/book-covers/defending-constantine.jpg" alt="Defending Constantine book cover" loading="lazy" /><div class="spine"></div></div>
+  <div class="shelf roster-list">
+    <article class="book roster-row" data-category="history">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/defending-constantine.jpg" alt="Defending Constantine book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">01</div>
       <div class="body">
         <div class="book-tag">History &amp; The Faith</div>
@@ -215,8 +176,8 @@
         <a class="btn-ghost buy-link" href="https://www.amazon.com/dp/0830827226" target="_blank" rel="noopener">Buy on Amazon ↗</a>
       </div>
     </article>
-    <article class="book" data-category="marriage">
-      <div class="book-cover"><img src="assets/images/book-covers/reforming-marriage.jpg" alt="Reforming Marriage book cover" loading="lazy" /><div class="spine"></div></div>
+    <article class="book roster-row" data-category="marriage">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/reforming-marriage.jpg" alt="Reforming Marriage book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">02</div>
       <div class="body">
         <div class="book-tag">The Home &amp; Marriage</div>
@@ -228,8 +189,8 @@
         <a class="btn-ghost buy-link" href="https://canonpress.com/products/reforming-marriage-gospel-living-for-couples" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
       </div>
     </article>
-    <article class="book" data-category="marriage">
-      <div class="book-cover"><img src="assets/images/book-covers/federal-husband.jpg" alt="Federal Husband book cover" loading="lazy" /><div class="spine"></div></div>
+    <article class="book roster-row" data-category="marriage">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/federal-husband.jpg" alt="Federal Husband book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">03</div>
       <div class="body">
         <div class="book-tag">The Home &amp; Marriage</div>
@@ -241,8 +202,8 @@
         <a class="btn-ghost buy-link" href="https://canonpress.com/products/federal-husband" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
       </div>
     </article>
-    <article class="book" data-category="child-training">
-      <div class="book-cover"><img src="assets/images/book-covers/future-men.jpg" alt="Future Men book cover" loading="lazy" /><div class="spine"></div></div>
+    <article class="book roster-row" data-category="child-training">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/future-men.jpg" alt="Future Men book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">04</div>
       <div class="body">
         <div class="book-tag">Child Training &amp; Sons</div>
@@ -254,8 +215,8 @@
         <a class="btn-ghost buy-link" href="https://canonpress.com/products/future-men-raising-boys-to-fight-giants" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
       </div>
     </article>
-    <article class="book" data-category="work">
-      <div class="book-cover"><img src="assets/images/book-covers/its-good-to-be-a-man.jpg" alt="It's Good to Be a Man book cover" loading="lazy" /><div class="spine"></div></div>
+    <article class="book roster-row" data-category="work">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/its-good-to-be-a-man.jpg" alt="It's Good to Be a Man book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">05</div>
       <div class="body">
         <div class="book-tag">Work, Calling &amp; The World</div>
@@ -267,8 +228,8 @@
         <a class="btn-ghost buy-link" href="https://canonpress.com/products/its-good-to-be-a-man" target="_blank" rel="noopener">Buy on Canon Press ↗</a>
       </div>
     </article>
-    <article class="book" data-category="work">
-      <div class="book-cover"><img src="assets/images/book-covers/case-for-christian-nationalism.jpg" alt="The Case for Christian Nationalism book cover" loading="lazy" /><div class="spine"></div></div>
+    <article class="book roster-row" data-category="work">
+      <div class="book-cover roster-photo roster-photo--square"><img src="assets/images/book-covers/case-for-christian-nationalism.jpg" alt="The Case for Christian Nationalism book cover" loading="lazy" /><div class="spine"></div></div>
       <div class="idx">06</div>
       <div class="body">
         <div class="book-tag">Work, Calling &amp; The World</div>
@@ -304,6 +265,7 @@
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
+  <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
 
 <script>

@@ -33,7 +33,7 @@
     aspect-ratio: 1/1;
     background: var(--paper-2);
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: var(--radius-soft);
     width: 66.6667%;
     justify-self: start;
   }
@@ -72,7 +72,7 @@
     display: inline-flex; align-items: center; gap: 10px;
     padding: 14px 22px;
     border: 1.5px solid var(--ink);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
     text-transform: uppercase; font-weight: 700;
     color: var(--ink);
@@ -80,7 +80,7 @@
   }
   .platform:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); transform: translateY(-1px); }
   .platform svg { display: block; }
-  .platform .arrow { font-family: var(--sans); letter-spacing: 0; }
+  /* .arrow now shared in site.css */
 
   /* ---------- Tracks ---------- */
   .tracks-head {
@@ -89,10 +89,7 @@
     padding-bottom: 6px;
   }
   .tracks-head .roman {
-    font-family: var(--display); font-style: italic;
-    font-size: clamp(36px, 4vw, 56px);
-    color: var(--accent);
-    line-height: 0.9;
+    font-size: clamp(36px, 4vw, 56px); /* font-family/style/line-height/color come from shared `.roman` in site.css */
   }
   .tracks-head h2 {
     margin: 0;
@@ -102,12 +99,7 @@
     line-height: 1.0;
     font-weight: 400;
   }
-  .tracks-head .count {
-    margin-left: auto;
-    font-family: ui-monospace, monospace;
-    font-size: 11px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--muted);
-  }
+  .tracks-head .count { margin-left: auto; } /* typography comes from shared `.sec-num` in site.css */
 
   .tracks {
     list-style: none; margin: 0; padding: 0;
@@ -125,9 +117,7 @@
   }
   .track:hover { padding-left: 8px; }
   .track .idx {
-    font-family: var(--display); font-style: italic;
-    font-size: 24px; color: var(--accent);
-    letter-spacing: 0.02em;
+    font-size: 24px; letter-spacing: 0.02em; /* font-family/style/color come from shared `.idx` in site.css */
   }
   .track .title {
     font-family: var(--display);
@@ -144,11 +134,11 @@
     letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700;
     padding: 8px 14px;
     border: 1px solid var(--rule);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     color: var(--ink-2);
     transition: background .15s ease, color .15s ease, border-color .15s ease;
   }
-  .goto .arrow { font-family: var(--sans); letter-spacing: 0; font-size: 11px; }
+  /* .arrow now shared in site.css */
   .goto:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
   @media (max-width: 720px) {
     .track { grid-template-columns: 40px 1fr; row-gap: 10px; }
@@ -229,7 +219,7 @@
   <div class="tracks-head">
     <span class="roman">I</span>
     <h2>The Tracks</h2>
-    <span class="count">VIII songs</span>
+    <span class="count sec-num">VIII songs</span>
   </div>
 
   <ol class="tracks">
@@ -320,6 +310,7 @@
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
+  <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
 
 <script>

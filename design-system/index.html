@@ -90,27 +90,27 @@
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--paper);"></div>
           <span class="ds-swatch-name">--paper</span>
-          <span class="ds-swatch-value">#F1ECE0 light · #0E0E0C dark</span>
+          <span class="ds-swatch-value">#EFEDE8 light · #141006 dark</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--paper-2);"></div>
           <span class="ds-swatch-name">--paper-2</span>
-          <span class="ds-swatch-value">#E7E1D2 light · #1A1916 dark</span>
+          <span class="ds-swatch-value">#E0DCD2 light · #281F0C dark</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--ink);"></div>
           <span class="ds-swatch-name">--ink</span>
-          <span class="ds-swatch-value">#0E0E0C light · #F1ECE0 dark</span>
+          <span class="ds-swatch-value">#141006 light · #EFEDE8 dark</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--ink-2);"></div>
           <span class="ds-swatch-name">--ink-2</span>
-          <span class="ds-swatch-value">#2A2925 light · #D8D2C2 dark</span>
+          <span class="ds-swatch-value">#3B2F11 light · #D8D3C6 dark</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--muted);"></div>
           <span class="ds-swatch-name">--muted</span>
-          <span class="ds-swatch-value">#6E685D light · #8A857A dark</span>
+          <span class="ds-swatch-value">#82714A light · #9A8C6C dark</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--paper-2); border-style: dashed;"></div>
@@ -120,12 +120,12 @@
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--accent);"></div>
           <span class="ds-swatch-name">--accent</span>
-          <span class="ds-swatch-value">#8C2A1F (default, both schemes)</span>
+          <span class="ds-swatch-value">#1D3263 (default, both schemes)</span>
         </div>
         <div class="ds-swatch">
           <div class="ds-swatch-fill" style="background: var(--on-accent);"></div>
           <span class="ds-swatch-name">--on-accent</span>
-          <span class="ds-swatch-value">#F1ECE0 (both schemes)</span>
+          <span class="ds-swatch-value">#EFEDE8 (both schemes)</span>
         </div>
       </div>
     </div>
@@ -287,7 +287,7 @@
         <div class="ds-hatch" style="height: 90px;"></div>
       </div>
       <div class="ds-spec"><span class="ds-spec-tag">index.html → .form input (pill text input)</span>
-        <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+        <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:var(--radius-pill);">
           <input type="email" placeholder="your@inbox.com" style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
         </div>
       </div>
@@ -405,15 +405,15 @@
       <div class="ds-group-head"><h3>Email signup form</h3></div>
       <div class="ds-grid-2">
         <div class="ds-spec"><span class="ds-spec-tag">index.html → .form</span>
-          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:var(--radius-pill);">
             <input placeholder="your@inbox.com" style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
-            <button style="background:var(--ink); color:var(--paper); padding:13px 24px; border-radius:999px; font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlist →</button>
+            <button style="background:var(--ink); color:var(--paper); padding:13px 24px; border-radius:var(--radius-pill); font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlist →</button>
           </div>
         </div>
         <div class="ds-spec"><span class="ds-spec-tag">index.html → .form.success</span>
-          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:var(--radius-pill);">
             <input value="you@inbox.com" readonly style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
-            <button style="background:var(--accent); color:var(--on-accent); padding:13px 24px; border-radius:999px; font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlisted ✓</button>
+            <button style="background:var(--accent); color:var(--on-accent); padding:13px 24px; border-radius:var(--radius-pill); font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlisted ✓</button>
           </div>
         </div>
       </div>

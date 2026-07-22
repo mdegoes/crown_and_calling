@@ -36,7 +36,7 @@
     aspect-ratio: 5/4;
     background: var(--paper-2);
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: var(--radius-soft);
     width: 66.6667%;
     justify-self: start;
   }
@@ -47,12 +47,8 @@
     color: var(--ink); background: var(--paper);
     padding: 6px 10px; border: 1px solid var(--rule);
   }
-  .resource-img .num {
+  .resource-img .num-badge {
     position: absolute; top: 16px; right: 16px;
-    font-family: var(--display); font-style: italic;
-    font-size: 18px;
-    background: var(--ink); color: var(--paper);
-    padding: 4px 12px;
   }
   .resource-img img {
     position: absolute; inset: 0;
@@ -133,8 +129,7 @@
     color: var(--muted);
   }
   .forthcoming-list li .idx {
-    font-style: italic; color: var(--accent);
-    font-size: 0.7em;
+    font-size: 0.7em; /* font-family/style/color come from shared `.idx` in site.css */
   }
   .forthcoming-list li .when {
     font-family: var(--sans); font-size: 10px;
@@ -195,7 +190,7 @@
       <a class="resource-img" href="family-prayer.html" aria-label="Open the Seven Days of Family Prayer guide">
         <img src="assets/images/7_days_of_prayer.png" alt="A family kneeling together in prayer in their living room" loading="lazy" />
         <div class="tag">GUIDE · PRINTABLE</div>
-        <div class="num">01</div>
+        <div class="num-badge">01</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Family Prayer Guide</div>
@@ -216,7 +211,7 @@
       <a class="resource-img" href="worthy-books.html" aria-label="Open Worthy Books">
         <img src="assets/images/worth_a_read.png" alt="A wood-paneled home library lined with leather-bound books" loading="lazy" />
         <div class="tag">READING LIST</div>
-        <div class="num">02</div>
+        <div class="num-badge">02</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Reading List</div>
@@ -236,7 +231,7 @@
       <a class="resource-img" href="worthy-men.html" aria-label="Open Worthy Men">
         <img src="assets/images/worth_a_follow.png" alt="A podcast microphone and Bible on a desk in a study, with a cross and rifle mounted on the wall behind" loading="lazy" />
         <div class="tag">DIRECTORY</div>
-        <div class="num">03</div>
+        <div class="num-badge">03</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Directory</div>
@@ -275,6 +270,7 @@
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
+  <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
 
 <script>

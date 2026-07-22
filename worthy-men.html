@@ -72,7 +72,7 @@
     width: 100%;
     appearance: none; -webkit-appearance: none; -moz-appearance: none;
     padding: 12px 42px 12px 20px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1.5px solid var(--rule);
     background: transparent;
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
@@ -103,61 +103,22 @@
   }
   .filter-select-wrap.is-active::after { background-color: var(--paper); }
 
-  /* ---------- Roster list ---------- */
-  .roster {
-    border-top: 2px solid var(--ink);
-    display: flex; flex-direction: column;
-  }
-  .person {
-    display: grid;
-    grid-template-columns: 96px 60px 1fr auto;
-    align-items: center;
-    gap: clamp(16px, 2.5vw, 32px);
-    padding: clamp(20px, 2.5vw, 32px) 0;
-    border-bottom: 1px solid var(--rule);
-    transition: padding-left .2s ease;
-  }
-  .person[hidden] { display: none; }
-  .person:hover { padding-left: 8px; }
+  /* ---------- Roster list ----------
+     Shared roster skeleton (list wrapper, row grid, photo overlay) now lives in
+     site.css as .roster-list / .roster-row / .roster-photo, applied alongside
+     .roster / .person / .person-photo below — kept in place since .person and
+     .filter-select-wrap are queried directly by this page's filter script.
+     Only person-specific bits remain here. */
   @media (max-width: 720px) {
-    .person {
-      grid-template-columns: 64px 1fr;
-      gap: 16px;
-      row-gap: 6px;
-    }
     .person .idx { grid-column: 1; grid-row: 2; }
     .person .body { grid-column: 2; grid-row: 1 / 3; }
     .person .person-links { grid-column: 2; grid-row: 3; justify-self: start; }
     .person-links { align-items: flex-start; }
   }
 
-  .person-photo {
-    position: relative;
-    aspect-ratio: 1/1;
-    background: var(--paper-2);
-    overflow: hidden;
-    border-radius: 50%;
-    box-shadow: 1px 1px 0 var(--rule);
-  }
-  .person-photo::before {
-    content: ""; position: absolute; inset: 0;
-    background: repeating-linear-gradient(135deg,
-      transparent 0 8px,
-      color-mix(in oklab, var(--ink) 7%, transparent) 8px 9px);
-  }
-  .person-photo img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
   .person .idx {
-    font-family: var(--display); font-style: italic;
-    font-size: clamp(28px, 3vw, 40px);
-    color: var(--accent);
-    letter-spacing: -0.01em;
-    text-align: center;
+    font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.01em; text-align: center;
+    /* font-family/style/color come from shared `.idx` in site.css */
   }
 
   .person .body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
@@ -184,7 +145,7 @@
     display: inline-flex; align-items: center;
     width: fit-content;
     padding: 5px 12px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: color-mix(in oklab, var(--accent) 12%, transparent);
     border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
     border-bottom: 1px dashed color-mix(in oklab, var(--accent) 60%, transparent);
@@ -212,9 +173,16 @@
     opacity: 1; visibility: visible; transform: translateY(0);
     pointer-events: auto;
   }
-  .trust-popover .trust-legend-list { gap: 8px; }
-  .trust-popover .trust-tier { gap: 8px; }
-  .trust-popover .desc { font-size: 13.5px; }
+  .trust-popover .trust-legend-list { gap: 10px; }
+  .trust-popover .trust-tier {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 2px 8px;
+  }
+  .trust-popover .trust-tier .desc {
+    grid-column: 1 / -1;
+    font-size: 13.5px;
+  }
 
   .person-tags {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -331,9 +299,9 @@
     </div>
   </div>
 
-  <div class="roster">
-    <article class="person" data-categories="apologetics textual-criticism debate-rhetoric" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/wes-huff.jpg" alt="Wes Huff" loading="lazy" /></div>
+  <div class="roster roster-list">
+    <article class="person roster-row" data-categories="apologetics textual-criticism debate-rhetoric" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/wes-huff.jpg" alt="Wes Huff" loading="lazy" /></div>
       <div class="idx">01</div>
       <div class="body">
         <h3 class="name">Wes Huff</h3>
@@ -365,8 +333,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="self-defense-firearms biblical-masculinity homesteading" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/john-lovell.jpg" alt="John Lovell" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="self-defense-firearms biblical-masculinity homesteading" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/john-lovell.jpg" alt="John Lovell" loading="lazy" /></div>
       <div class="idx">02</div>
       <div class="body">
         <h3 class="name">John Lovell</h3>
@@ -397,8 +365,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="pastoral-counsel classical-education postmillennialism culture-commentary" data-tier="tier-5">
-      <div class="person-photo"><img src="assets/images/follow-photos/doug-wilson.jpg" alt="Doug Wilson" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="pastoral-counsel classical-education postmillennialism culture-commentary" data-tier="tier-5">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/doug-wilson.jpg" alt="Doug Wilson" loading="lazy" /></div>
       <div class="idx">03</div>
       <div class="body">
         <h3 class="name">Doug Wilson</h3>
@@ -430,8 +398,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="headship-patriarchy pastoral-counsel music unseen-world" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/brian-sauve.jpg" alt="Brian Sauvé" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="headship-patriarchy pastoral-counsel music unseen-world" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/brian-sauve.jpg" alt="Brian Sauvé" loading="lazy" /></div>
       <div class="idx">04</div>
       <div class="body">
         <h3 class="name">Brian Sauvé</h3>
@@ -465,8 +433,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="pastoral-counsel culture-commentary reformed-theology" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/toby-sumpter.jpg" alt="Toby Sumpter" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="pastoral-counsel culture-commentary reformed-theology" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/toby-sumpter.jpg" alt="Toby Sumpter" loading="lazy" /></div>
       <div class="idx">05</div>
       <div class="body">
         <h3 class="name">Toby Sumpter</h3>
@@ -497,8 +465,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="biblical-masculinity headship-patriarchy fatherhood culture-commentary" data-tier="tier-5">
-      <div class="person-photo"><img src="assets/images/follow-photos/michael-foster.jpg" alt="Michael Foster" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="biblical-masculinity headship-patriarchy fatherhood culture-commentary" data-tier="tier-5">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-foster.jpg" alt="Michael Foster" loading="lazy" /></div>
       <div class="idx">06</div>
       <div class="body">
         <h3 class="name">Michael Foster</h3>
@@ -531,8 +499,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="christian-nationalism politics" data-tier="tier-4">
-      <div class="person-photo"></div>
+    <article class="person roster-row" data-categories="christian-nationalism politics" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"></div>
       <div class="idx">07</div>
       <div class="body">
         <h3 class="name">Stephen Wolfe</h3>
@@ -562,8 +530,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="politics culture-commentary" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/auron-macintyre.jpg" alt="Auron MacIntyre" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="politics culture-commentary" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/auron-macintyre.jpg" alt="Auron MacIntyre" loading="lazy" /></div>
       <div class="idx">08</div>
       <div class="body">
         <h3 class="name">Auron MacIntyre</h3>
@@ -593,8 +561,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="reformed-theology postmillennialism deconstruction-evangelicalism" data-tier="tier-3">
-      <div class="person-photo"></div>
+    <article class="person roster-row" data-categories="reformed-theology postmillennialism deconstruction-evangelicalism" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"></div>
       <div class="idx">09</div>
       <div class="body">
         <h3 class="name">Josh Haymes</h3>
@@ -626,8 +594,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="politics second-amendment military-service" data-tier="tier-4">
-      <div class="person-photo"><img src="assets/images/follow-photos/nick-freitas.jpg" alt="Nick Freitas" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="politics second-amendment military-service" data-tier="tier-4">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/nick-freitas.jpg" alt="Nick Freitas" loading="lazy" /></div>
       <div class="idx">10</div>
       <div class="body">
         <h3 class="name">Nick Freitas</h3>
@@ -658,8 +626,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="politics culture-commentary debate-rhetoric" data-tier="tier-3">
-      <div class="person-photo"><img src="assets/images/follow-photos/michael-knowles.jpg" alt="Michael Knowles" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="politics culture-commentary debate-rhetoric" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-knowles.jpg" alt="Michael Knowles" loading="lazy" /></div>
       <div class="idx">11</div>
       <div class="body">
         <h3 class="name">Michael Knowles</h3>
@@ -691,8 +659,8 @@
       </div>
     </article>
 
-    <article class="person" data-categories="christian-nationalism american-christian-history" data-tier="tier-3">
-      <div class="person-photo"><img src="assets/images/follow-photos/david-barton.jpg" alt="Wall Builders" loading="lazy" /></div>
+    <article class="person roster-row" data-categories="christian-nationalism american-christian-history" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/david-barton.jpg" alt="Wall Builders" loading="lazy" /></div>
       <div class="idx">12</div>
       <div class="body">
         <h3 class="name">Wall Builders</h3>
@@ -777,6 +745,7 @@
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
+  <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
 
 <script>

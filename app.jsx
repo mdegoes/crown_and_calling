@@ -178,6 +178,7 @@ function Foot({ onJump }) {
         <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
         <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
       </div>
+      <div className="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
     </footer>
   );
 }

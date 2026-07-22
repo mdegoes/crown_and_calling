@@ -55,7 +55,7 @@ Then open <http://localhost:8000>.
 ## Design notes
 
 - **Type:** Baskerville / Libre Baskerville throughout.
-- **Palette:** warm paper (`#F1ECE0`) and ink (`#0E0E0C`), with a configurable accent (default `#8C2A1F`).
+- **Palette:** warm paper (`#EFEDE8`) and ink (`#141006`), derived from a bronze/olive base (`#634e1d`) complementary to the accent, plus a configurable accent (default `#1D3263`).
 - **Schemes:** light (`paper`) and dark (`ink`), plus comfortable/compact density — toggled via the tweaks panel.
 
 ## License
